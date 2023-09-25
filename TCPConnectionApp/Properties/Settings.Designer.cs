@@ -25,7 +25,7 @@ namespace TCPConnectionApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6667")]
         public int ServerPort {
             get {
                 return ((int)(this["ServerPort"]));
@@ -49,7 +49,7 @@ namespace TCPConnectionApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("123")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C409BA1B89E3F56B")]
         public string EncKey {
             get {
                 return ((string)(this["EncKey"]));
@@ -61,7 +61,7 @@ namespace TCPConnectionApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("123")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0F2D0383D4DCABC1")]
         public string EncKey2 {
             get {
                 return ((string)(this["EncKey2"]));

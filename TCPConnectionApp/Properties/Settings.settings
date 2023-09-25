@@ -3,16 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="ServerPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+      <Value Profile="(Default)">6667</Value>
     </Setting>
     <Setting Name="ClientPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="EncKey" Type="System.String" Scope="User">
-      <Value Profile="(Default)">123</Value>
+      <Value Profile="(Default)">C409BA1B89E3F56B</Value>
     </Setting>
     <Setting Name="EncKey2" Type="System.String" Scope="User">
-      <Value Profile="(Default)">123</Value>
+      <Value Profile="(Default)">0F2D0383D4DCABC1</Value>
     </Setting>
     <Setting Name="Encrypt" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

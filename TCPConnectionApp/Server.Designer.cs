@@ -120,6 +120,7 @@
             // 
             rtbServerData.Location = new Point(3, 166);
             rtbServerData.Name = "rtbServerData";
+            rtbServerData.ReadOnly = true;
             rtbServerData.Size = new Size(578, 272);
             rtbServerData.TabIndex = 8;
             rtbServerData.Text = "";
