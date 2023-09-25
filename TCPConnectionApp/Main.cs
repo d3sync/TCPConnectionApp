@@ -3,11 +3,14 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using SuperSimpleTcp;
+using TCPConnectionApp.Properties;
+
 namespace TCPConnectionApp
 {
     public partial class Main : Form
     {
         private SimpleTcpClient tcpClient;
+        private Server _serverForm = new Server();
         const char Vt = '\v';       // Vertical Tab (VT)
         const char Fs = '\u001C';   // File Separator (FS)
         const char Cr = '\r';       // Carriage Return (CR)
@@ -122,12 +125,19 @@ namespace TCPConnectionApp
 
         private void Events_DataSent(object? sender, DataSentEventArgs e)
         {
-            AppendWithNewLine($"[{DateTime.Now}]:{e.BytesSent}");
+            //AppendWithNewLine($"[{DateTime.Now}]:{e.BytesSent}");
         }
 
         private void Events_DataReceived(object? sender, DataReceivedEventArgs e)
         {
-            AppendWithNewLine($"[{DateTime.Now}]:{Encoding.UTF8.GetString(e.Data.Array, 0, e.Data.Count)}");
+            var data = Encoding.UTF8.GetString(e.Data.Array, 0, e.Data.Count);
+            var ip = data.Split(" ")[0];
+            var text = data.Split(" ")[1];
+            if (Properties.Settings.Default.Encrypt)
+            {
+                data = Decrypt(text);
+            }
+            AppendWithNewLine($"[{DateTime.Now}]:{ip}{data}");
         }
 
         private void Events_Connected(object? sender, ConnectionEventArgs e)
@@ -140,6 +150,15 @@ namespace TCPConnectionApp
         {
             if (tcpClient is not null)
                 tcpClient.Disconnect();
+        }
+
+        private string Encrypt(string input)
+        {
+            return Encryption.Encrypt(input, Properties.Settings.Default.EncKey,Properties.Settings.Default.EncKey2);
+        }
+        private string Decrypt(string input)
+        {
+            return Encryption.Decrypt(input, Properties.Settings.Default.EncKey,Properties.Settings.Default.EncKey2);
         }
         private void PopulateLastMessagesMenu()
         {
@@ -176,8 +195,12 @@ namespace TCPConnectionApp
                 else
                 {
                     var data = rtbSendData.Text;
+                    if (Properties.Settings.Default.Encrypt)
+                    {
+                        data = Encrypt(data);
+                    }
                     if (rtbSendData.Text.Contains(@"\r"))
-                        data = data.Replace(@"\r",Cr.ToString());
+                        data = data.Replace(@"\r", Cr.ToString());
                     if (rtbSendData.Text.Contains(@"\n"))
                         data = data.Replace(@"\n", Environment.NewLine);
                     if (cbMLLP.Checked)
@@ -195,9 +218,10 @@ namespace TCPConnectionApp
                         sentMessages[_pos] = rtbSendData.Text;
                     }
                     _pos++;
-                    AppendWithNewLine(">>>>>>>>" + DateTime.Now + " Transmission Started!");
-                    AppendWithNewLine(rtbSendData.Text);
-                    AppendWithNewLine(">>>>>>>> EOT");
+                    //AppendWithNewLine(">>>>>>>>" + DateTime.Now + " Transmission Started!");
+                    AppendWithNewLine(Environment.NewLine + ">>>" + rtbSendData.Text);
+                    ScrollToEnd();
+                    //AppendWithNewLine(">>>>>>>> EOT");
                     rtbSendData.Clear();
                     PopulateLastMessagesMenu();
                 }
@@ -252,5 +276,13 @@ namespace TCPConnectionApp
             throw new Exception("No network adapters with an IPv4 address in the system!");
         }
 
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_serverForm is null)
+            {
+                _serverForm = new Server();
+            }
+            _serverForm.Show();
+        }
     }
 }
