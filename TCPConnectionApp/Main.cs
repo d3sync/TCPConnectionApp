@@ -1,3 +1,4 @@
+using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -131,13 +132,14 @@ namespace TCPConnectionApp
         private void Events_DataReceived(object? sender, DataReceivedEventArgs e)
         {
             var data = Encoding.UTF8.GetString(e.Data.Array, 0, e.Data.Count);
-            var ip = data.Split(" ")[0];
-            var text = data.Split(" ")[1];
+            var dataArray = data.Split(" ");
+            var ip = dataArray[0];
+            var text = string.Join(" ", dataArray.Skip(1));
             if (Properties.Settings.Default.Encrypt)
             {
                 data = Decrypt(text);
             }
-            AppendWithNewLine($"[{DateTime.Now}]:{ip}{data}");
+            AppendWithNewLine($"[{DateTime.Now}]:{ip} {data}");
         }
 
         private void Events_Connected(object? sender, ConnectionEventArgs e)

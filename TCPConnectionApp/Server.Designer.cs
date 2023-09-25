@@ -103,6 +103,7 @@
             // txtKey
             // 
             txtKey.Location = new Point(157, 37);
+            txtKey.MaxLength = 16;
             txtKey.Name = "txtKey";
             txtKey.Size = new Size(294, 23);
             txtKey.TabIndex = 6;
@@ -110,6 +111,7 @@
             // txtKey2
             // 
             txtKey2.Location = new Point(157, 66);
+            txtKey2.MaxLength = 16;
             txtKey2.Name = "txtKey2";
             txtKey2.Size = new Size(294, 23);
             txtKey2.TabIndex = 7;

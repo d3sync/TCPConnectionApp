@@ -52,6 +52,10 @@ namespace TCPConnectionApp
                 _server.Start();
                 if (_server.IsListening)
                 {
+                    BeginInvoke((Action)(() =>
+                    {
+                        this.btnStartServer.Enabled = false;
+                    }));
                     PrintToRtb($"*** Server is listening on {_port}.");
                 }
                 //_logger.Information("[ {status} ] TCP Server started listening on {port}.", "OK", port);
@@ -69,24 +73,19 @@ namespace TCPConnectionApp
 
         public void Stop()
         {
-            _server.Stop();
+            try
+            {
+                if (_server.IsListening)
+                    _server.Stop();
+            }
+            catch 
+            {
+
+            }
+
         }
 
-        //private void Events_DataReceived(object? sender, DataReceivedEventArgs e)
-        //{
-        //    var ip = e.IpPort;
-        //    var data = Encoding.UTF8.GetString(e.Data.Array, 0, e.Data.Count);
-        //    data = $"[{ip}] {data}";
-        //    byte[] byteArray = Encoding.UTF8.GetBytes(data);
-        //    ArraySegment<byte> arraySegment = new ArraySegment<byte>(byteArray);
 
-        //    var d = (SimpleTcpServer)sender;
-        //    foreach (var client in d.GetClients())
-        //    {
-        //        _server.Send(client, arraySegment.Array);
-        //    }
-        //    PrintToRtb($"*** Broadcasted: {data}");
-        //}
         private void Events_DataReceived(object? sender, DataReceivedEventArgs e)
         {
             var ip = e.IpPort;
@@ -169,6 +168,7 @@ namespace TCPConnectionApp
         {
             Stop();
             PrintToRtb("*** Stopped the server.");
+            this.btnStartServer.Enabled = true;
         }
 
         private void Server_FormClosing(object sender, FormClosingEventArgs e)
@@ -179,18 +179,20 @@ namespace TCPConnectionApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // For AES-128, use a 128-bit key (16 bytes) and a 128-bit IV (16 bytes)
-            byte[] aesKey = new byte[16];
-            byte[] aesIV = new byte[16];
-
-// Generate random bytes for the key and IV
+            string aesKeyHex = GenerateRandomHexString(16);
+            string aesIVHex = GenerateRandomHexString(16);
+            
+            PrintToRtb("(Encrypt Key) >>> " + aesKeyHex);
+            PrintToRtb("(Encrypt Key 2) >>> " + aesIVHex);
+        }
+        string GenerateRandomHexString(int length)
+        {
             using (RNGCryptoServiceProvider rngCsp = new RNGCryptoServiceProvider())
             {
-                rngCsp.GetBytes(aesKey);
-                rngCsp.GetBytes(aesIV);
+                byte[] randomBytes = new byte[length / 2]; // Each byte corresponds to two hexadecimal characters
+                rngCsp.GetBytes(randomBytes);
+                return BitConverter.ToString(randomBytes).Replace("-", ""); // Remove hyphens
             }
-            PrintToRtb("Key:" + aesKey);
-            PrintToRtb("IV:" + aesIV);
         }
     }
 }
