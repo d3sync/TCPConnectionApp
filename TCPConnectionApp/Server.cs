@@ -50,6 +50,7 @@ namespace TCPConnectionApp
             try
             {
                 _server.Start();
+                lbClients.Items.Clear();
                 if (_server.IsListening)
                 {
                     BeginInvoke((Action)(() =>
@@ -77,6 +78,7 @@ namespace TCPConnectionApp
             {
                 if (_server.IsListening)
                     _server.Stop();
+                PopulateLb();
             }
             catch 
             {
@@ -104,15 +106,25 @@ namespace TCPConnectionApp
 
         private void Events_ClientDisconnected(object? sender, ConnectionEventArgs e)
         {
+            var who = e.IpPort;
             //Console.WriteLine("*** [" + e.IpPort + "] client connected");
             PrintToRtb("*** [" + e.IpPort + "] client connected");
+            foreach (var xd in _server.GetClients())
+            {
+                _server.Send(xd,"*** [" + who + "] client connected");
+            }
             PopulateLb();
         }
 
         private void EventsOnClientConnected(object? sender, ConnectionEventArgs e)
         {
+            var who = e.IpPort;
             //Console.WriteLine("*** [" + e.IpPort + "] client connected");
             PrintToRtb("*** [" + e.IpPort + "] client connected");
+            foreach (var xd in _server.GetClients())
+            {
+                _server.Send(xd,"*** [" + who + "] client connected");
+            }
             PopulateLb();
         }
 
