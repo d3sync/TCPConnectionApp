@@ -50,11 +50,12 @@ namespace TCPConnectionApp
             try
             {
                 _server.Start();
-                lbClients.Items.Clear();
+                
                 if (_server.IsListening)
                 {
                     BeginInvoke((Action)(() =>
                     {
+                        lbClients.Items.Clear();
                         this.btnStartServer.Enabled = false;
                     }));
                     PrintToRtb($"*** Server is listening on {_port}.");
@@ -79,6 +80,7 @@ namespace TCPConnectionApp
                 if (_server.IsListening)
                     _server.Stop();
                 PopulateLb();
+                _server.Dispose();
             }
             catch 
             {
@@ -138,16 +140,13 @@ namespace TCPConnectionApp
             var dt = DateTime.Now.ToString("HH:mm:ss");
             try
             {
-                if (rtbServerData.InvokeRequired) // Check if we're on a different thread than the control's
+                BeginInvoke((Action)(() =>
                 {
-                    rtbServerData.Invoke(new Action<string>(PrintToRtb),
-                        text);
-                }
-                else
-                {
-                    rtbServerData.AppendText($"[{dt}]" + text + Environment.NewLine); // Directly update the control since we're on the main thread
-                }
-                ScrollToEnd();
+                    rtbServerData.AppendText($"[{dt}]" + text + Environment.NewLine);
+                    ScrollToEnd();
+                }));
+                
+                
             }
             catch
             {

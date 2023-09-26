@@ -84,17 +84,12 @@ namespace TCPConnectionApp
         {
             try
             {
-                if (rtbData.InvokeRequired) // Check if we're on a different thread than the control's
-                {
-                    rtbData.Invoke(new Action<string>(AppendWithNewLine),
-                        text); // Invoke the same method on the main thread
-                }
-                else
+                BeginInvoke((Action)(() =>
                 {
                     rtbData.AppendText(
-                        $"{text}{Environment.NewLine}"); // Directly update the control since we're on the main thread
-                }
-                ScrollToEnd();
+                        $"{text}{Environment.NewLine}"); 
+                    ScrollToEnd();
+                }));
             }
             catch
             {
